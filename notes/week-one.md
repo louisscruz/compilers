@@ -66,5 +66,3 @@ Typically, this is assembly code, but sometimes it can be byte code or higher le
 If we were to look at Fortran's compiler, we would expect to see a sizable lexical analysis and parsing phases, a meager semantic analysis phase, and involved optimization and code generation phases.
 
 Today's compilers have very little lexical analysis and parsing, thanks to helpful tools, involved semantic phase, extremely involved optimization phase, and very little at the code generation phase.
-
-## Economy of Languages
