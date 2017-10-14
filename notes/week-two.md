@@ -220,3 +220,101 @@ If you hold that there is an underlying idea behind syntax, you know that there 
 Also, some syntactic systems are more apt at allowing for different modes of thought.
 
 Meaning is many to one, not one to many.
+
+## Lexical Specifications
+
+### Keywords
+
+To create "if" and "else," we could show it as follows:
+
+```
+'i''f' + 'e''l''s''e'
+```
+
+Shorthand for this is:
+
+```
+'if' + 'else'
+```
+
+### Integers
+
+```
+'0' + '1' + '2' + '3' + '4' + '5' + '6' + '7' + '8' + '9'
+```
+
+There is typically some kind of helper to denote this set.
+
+```
+digit
+```
+
+Note that `digit*` includes the empty string, so to select any number of repeating digits, we must use `digitdigit*`.
+The shorthand for this is `digit+`.
+
+### Letters or Digits, Starting with a Letter
+
+Character ranges are shown as:
+
+```
+[a-zA-Z]
+```
+
+This defines the union of all lower and uppercase letters.
+
+To get to a letter followed by letters or digits:
+
+```
+letters(letters + digits)*
+```
+
+### Whitespace
+
+` ` is a single space.
+`\n` is a new line.
+`\t` is a tab.
+
+```
+(' ' + '\n' + '\t')
+```
+
+### Pascal Example
+
+```
+num = digits opt_fraction opt_exponent
+opt_fraction = ('.'digits) + epsilon
+opt_exponent = ('E'('+'+'-'+epsilon)digits)+epsilon
+```
+
+Using standard optional syntax, these could also be shown as:
+
+```
+opt_fraction = ('.'digits)?
+opt_exponent = ('E'('+'+'-')?digits)?
+```
+
+### Review
+
+```
+A+ = AA*
+A | B = A + B
+'a' + 'b' + ... + 'z' = [a-z]
+complement of [a-z] = [^a-z]
+```
+
+### Maximal Munch
+
+If parsing `==`, should we consider it to be `=` and `=` or `==`?
+The rule that specifies that we should always take the longest possibility is called "maximal munch."
+
+### Prioritized Tokenization
+
+`if` is technically a possible keyword and a possible identifier.
+One way of handling this is to choose whichever it is first.
+Keywords have higher priority over identifiers.
+
+### Error Handling
+
+Use an expression that is equal to all strings not in the lexical specification.
+Put this error handling last.
+This pattern prevents the compiler from failing.
