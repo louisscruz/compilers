@@ -318,3 +318,104 @@ Keywords have higher priority over identifiers.
 Use an expression that is equal to all strings not in the lexical specification.
 Put this error handling last.
 This pattern prevents the compiler from failing.
+
+## Finite Automata
+
+Used as the implementation mechanism for lexers.
+
+### Elements of a Finite Automaton
+
+* An input alphabet sigma
+* A finite set of states S
+* A start state n
+* A set of accepting states F is a proper subset of S
+* A set of transitions
+
+If a finite automaton terminates on an accepting state, then it is accepted as input.
+There are two ways a rejection can be had:
+
+* terminates on any state other than an accepting state
+* a specified transition doesn't exist for a given state
+
+### Epsilon Moves
+
+The idea with this is that a transition can be made without reading input.
+
+This kind of move is not necessary.
+A decision has to be made whether or not the machine should make the epsilon move.
+
+Deterministic Finite Automata (DFA) do not make epsilon moves.
+They always make one transition per input per state.
+
+Nondeterministic Finite Automata (NFA) are those that can have multiple transitions for one input in a given state.
+They can have epsilon.
+
+DFA only ever takes one path through the state graph.
+
+NFA can choose.
+This means that an NFA accepts if **some** choices lead to an accepting state.
+NFA can be exponentially smaller than DFA.
+However, DFA are much faster to execute.
+
+## Regular Expressions to NFA
+
+What our lexer will need to do is:
+
+* Have a lexical specification
+* Have the regular expressions that define that lexical specification
+* Translate those expressions into NFA
+* Turn the NFA into DFA
+* Turn the DFA into table-driven implementation of DFA
+
+## NFA to DFA
+
+### Epsilon Closure
+
+The epsilon closure for a given node is the set of all of the nodes that can be reached from that start node only making epsilon moves.
+
+NFA may be in many states at any time.
+The question then becomes, how many different states?
+
+If there are N states, then it is clear that the cardinality of S must be less than or equal to N.
+There are 2^n - 1 different subsets of N.
+This is a large, but finite, set of possible configurations.
+
+### NFA Definitions
+
+```
+states = S
+start = s is a member of S
+final = F is a proper subset of S
+a(X) = { y | x is a member of X ^ x -a-> y }
+```
+
+### DFA Definitions
+
+```
+states = subsets of S
+start = Epsilon-closure(s)
+final = { X | X interects F != null }
+transitions = Epsilon-closure(a(X))
+```
+
+## Implementing FA
+
+### Table
+
+X acts as the moves, and Y acts as the states.
+
+This can result in many duplicate rows.
+
+### Table-Pointers
+
+Instead of using rows, we can point each value to a created row and reference that to remove duplicate storage.
+
+The references take time to dereference, so there is a slight time cost.
+
+### NFA Table
+
+Rows represent states, and columns represent the moves.
+The values are sets of states.
+
+This will use substantially less space.
+However, because the values are sets of states, the way that this table is iterated over is going to be much more costly.
